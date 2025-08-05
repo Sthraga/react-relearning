@@ -1,23 +1,18 @@
-import React, { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import "./TicTacToe.css";
+import BoardSettings from "./BoardSettings";
+import Board from "./Board";
 
-interface SquareProps {
-  value: string;
-  onSquareClick: () => void;
-}
+export type BoardValue = "X" | "O" | "";
 
-type BoardValue = "X" | "O" | "";
+const directions = [
+  { dx: 0, dy: 1 },
+  { dx: 1, dy: 0 },
+  { dx: 1, dy: 1 },
+  { dx: 1, dy: -1 },
+];
 
-function Square({ value, onSquareClick }: SquareProps) {
-  return (
-    <button className="square" onClick={onSquareClick}>
-      {value}
-    </button>
-  );
-}
-
-function Board() {
-  const [switchPlayer, setSwitchPlayer] = useState(false);
+const TicTacToe = () => {
   const [horizontalSquare, setHorizontalSquare] = useState(3);
   const [verticalSquare, setVerticalSquare] = useState(3);
   const [boardValue, setBoardValue] = useState<BoardValue[][]>(
@@ -26,53 +21,26 @@ function Board() {
     )
   );
 
-  function handleClick(i: number, j: number) {
-    if (boardValue[i][j] !== "") {
-      console.log("already clicked");
-      return;
-    }
-    if (switchPlayer) {
-      setBoardValue((boardValue) => {
-        boardValue[i][j] = "X";
-        return boardValue;
-      });
-    } else {
-      setBoardValue((boardValue) => {
-        boardValue[i][j] = "O";
-        return boardValue;
-      });
-    }
-    checkWinner(i, j, switchPlayer);
-    setSwitchPlayer(!switchPlayer);
-  }
-
   function checkWinner(vertical: number, horizontal: number, player: boolean) {
-    const isWinner = checkDirection(vertical, horizontal, player);
+    const playerSign: BoardValue = player ? "X" : "O";
+    const isWinner = checkAllDirection(vertical, horizontal, playerSign);
     if (isWinner) console.log("WINNER!");
   }
 
-  const directions = [
-    { dx: 0, dy: 1 },
-    { dx: 1, dy: 0 },
-    { dx: 1, dy: 1 },
-    { dx: 1, dy: -1 },
-  ];
-
-  function checkDirection(
+  function checkAllDirection(
     vertical: number,
     horizontal: number,
-    player: boolean
+    player: string
   ): boolean {
-    const playerSign: BoardValue = player ? "X" : "O";
     const numberToAlignWithTarget = 2;
 
     for (const direction of directions) {
-      const count = countDirection(
+      const count = countDirections(
         vertical,
         horizontal,
         direction.dx,
         direction.dy,
-        playerSign
+        player
       );
 
       if (count >= numberToAlignWithTarget) return true;
@@ -81,7 +49,7 @@ function Board() {
     return false;
   }
 
-  function countDirection(
+  function countDirections(
     vertical: number,
     horizontal: number,
     dx: number,
@@ -103,7 +71,7 @@ function Board() {
     dy: number,
     playerSign: string
   ): number {
-    let count = 0
+    let count = 0;
     while (
       horizontal + dx >= 0 &&
       vertical + dy >= 0 &&
@@ -118,106 +86,19 @@ function Board() {
     return count;
   }
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    if (+e.currentTarget.value > 0 && +e.currentTarget.value <= 10) {
-      switch (e.currentTarget.name) {
-        case "horizontal":
-          setBoardValue(
-            Array.from({ length: verticalSquare }, () =>
-              Array.from({ length: +e.currentTarget.value }, () => "")
-            )
-          );
-          setHorizontalSquare(+e.currentTarget.value);
-          console.log("vertical" + horizontalSquare.toString());
-          break;
-        case "vertical":
-          setBoardValue(
-            Array.from({ length: +e.currentTarget.value }, () =>
-              Array.from({ length: horizontalSquare }, () => "")
-            )
-          );
-          setVerticalSquare(+e.currentTarget.value);
-          console.log("vertical" + verticalSquare.toString());
-          break;
-      }
-    }
-  }
-
-  return (
-    <>
-      <div>
-        <div className="flex flex-col md:flex-row gap-6 mb-6 items-center justify-center">
-          <div className="flex flex-col items-start bg-white rounded-lg shadow-md p-4 m-2">
-            <label
-              htmlFor="horizontal"
-              className="mb-2 text-lg font-semibold text-gray-700"
-            >
-              Nombre de cases{" "}
-              <span className="text-blue-600">horizontales</span> :
-            </label>
-            <input
-              id="horizontal"
-              className="inputSquare w-20 px-2 py-1 rounded border-2 border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition"
-              type="number"
-              name="horizontal"
-              min={1}
-              max={10}
-              value={horizontalSquare}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="flex flex-col items-start bg-white rounded-lg shadow-md p-4 m-2">
-            <label
-              htmlFor="vertical"
-              className="mb-2 text-lg font-semibold text-gray-700"
-            >
-              Nombre de cases <span className="text-green-600">verticales</span>{" "}
-              :
-            </label>
-            <input
-              id="vertical"
-              className="inputSquare w-20 px-2 py-1 rounded border-2 border-green-400 focus:border-green-600 focus:ring-2 focus:ring-green-200 transition"
-              type="number"
-              name="vertical"
-              min={1}
-              max={10}
-              value={verticalSquare}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        className="flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-lg p-4 mb-6"
-        style={{ display: "inline-block" }}
-      >
-        {Array.from({ length: verticalSquare }).map((_, i) => (
-          <div
-            key={i}
-            className="flex flex-row"
-            style={{ marginBottom: i !== verticalSquare - 1 ? "4px" : "0" }}
-          >
-            {Array.from({ length: horizontalSquare }).map((_, j) => (
-              <Square
-                key={`${i.toString()}${j.toString()}-square`}
-                value={boardValue[i][j]}
-                onSquareClick={() => {
-                  handleClick(i, j);
-                }}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-const TicTacToe = () => {
   return (
     <>
       <h1>Tic-Tac-Toe</h1>
-      <Board />
+      <BoardSettings
+        {...{
+          horizontalSquare,
+          setHorizontalSquare,
+          verticalSquare,
+          setVerticalSquare,
+          setBoardValue,
+        }}
+      />
+      <Board {...{boardValue, setBoardValue, horizontalSquare, verticalSquare, checkWinner}} />
     </>
   );
 };
