@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+.square {
+  border: 1px solid #000000;
+  margin: 0.1em;
+  border-radius: 0px;
+  width: 40px; /* ou la taille que tu veux */
+  height: 40px;
+  font-size: 1.5rem; /* pour que le texte soit bien centré */
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+  /* Optionnel pour l'esthétique */
+}
+
+.square:focus,
+.square:focus-visible {
+  outline: none;
+}
+
+.inputSquare {
+    border: 1px #000000 solid;
+}

@@ -11,13 +11,19 @@ export default tseslint.config([
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
-      tseslint.configs.recommended,
+      // ...tseslint.configs.recommendedTypeChecked, // ou strictTypeChecked
+      ...tseslint.configs.strictTypeChecked,
+      // ...tseslint.configs.stylisticTypeChecked, // optionnel
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
   },
 ])

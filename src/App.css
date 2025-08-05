@@ -1,0 +1,26 @@
+.navBar {
+    width: 100vw;
+    background-color: #e5e7eb; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 64px;
+    display: flex;
+    align-items: center;
+}
+
+.listNavBar {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0 2rem;
+    width: 100%;
+    align-items: center;
+    height: 100%;
+}
+
+.navSpacer {
+    height: 64px;
+}

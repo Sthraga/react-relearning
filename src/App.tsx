@@ -1,16 +1,21 @@
 import "./App.css";
+import { Link } from "react-router-dom";
+import AppRouter from "./AppRouter";
 
 function App() {
   return (
     <>
-      <article>
-        <h1>My First Component</h1>
-        <ol>
-          <li>Components: UI Building Blocks</li>
-          <li>Defining a Component</li>
-          <li>Using a Component</li>
-        </ol>
-      </article>
+      <nav className="navBar">
+        <ul className="listNavBar">
+          <li><Link to="/">Accueil</Link></li>
+          <li><Link to="/tictactoe">Tic-tac-toe</Link></li>
+          <li><Link to="/puissance-quatre">Puissance4</Link></li>
+          <li><Link to="/about">À propos</Link></li>
+          <li><Link to="/login">Connexion</Link></li>
+        </ul>
+      </nav>
+      <div className="navSpacer" />
+      <AppRouter />
     </>
   );
 }
