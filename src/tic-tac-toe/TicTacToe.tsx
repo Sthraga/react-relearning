@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./TicTacToe.css";
 import BoardSettings from "./BoardSettings";
 import Board from "./Board";
+import Replay from "../shared-components/Replay";
+import Message from "../shared-components/Message";
 
 export type BoardValue = "X" | "O" | "";
 
@@ -20,11 +22,18 @@ const TicTacToe = () => {
       Array.from({ length: horizontalSquare }, () => "")
     )
   );
+  const [victoryThreshold, setVictoryThreshold] = useState(3);
+  const [playerState, setPlayerState] = useState<{
+    player: string;
+    hasWon: boolean;
+  }>({ player: "X", hasWon: false });
 
   function checkWinner(vertical: number, horizontal: number, player: boolean) {
-    const playerSign: BoardValue = player ? "X" : "O";
-    const isWinner = checkAllDirection(vertical, horizontal, playerSign);
-    if (isWinner) console.log("WINNER!");
+    const playerSign = player ? "X" : "O";
+    setPlayerState({
+      player: playerSign,
+      hasWon: checkAllDirection(vertical, horizontal, playerSign),
+    });
   }
 
   function checkAllDirection(
@@ -32,8 +41,6 @@ const TicTacToe = () => {
     horizontal: number,
     player: string
   ): boolean {
-    const numberToAlignWithTarget = 2;
-
     for (const direction of directions) {
       const count = countDirections(
         vertical,
@@ -43,9 +50,8 @@ const TicTacToe = () => {
         player
       );
 
-      if (count >= numberToAlignWithTarget) return true;
+      if (count >= victoryThreshold) return true;
     }
-
     return false;
   }
 
@@ -56,7 +62,7 @@ const TicTacToe = () => {
     dy: number,
     playerSign: string
   ): number {
-    let count = 0;
+    let count = 1;
 
     count += countInOneDirection(vertical, horizontal, dx, dy, playerSign);
     count += countInOneDirection(vertical, horizontal, -dx, -dy, playerSign);
@@ -72,6 +78,8 @@ const TicTacToe = () => {
     playerSign: string
   ): number {
     let count = 0;
+    const x: number = dx;
+    const y: number = dy;
     while (
       horizontal + dx >= 0 &&
       vertical + dy >= 0 &&
@@ -79,26 +87,71 @@ const TicTacToe = () => {
       vertical + dy < verticalSquare &&
       boardValue[vertical + dy][horizontal + dx] == playerSign
     ) {
+      // console.log(
+      //   "dx:" +
+      //     dx.toString() +
+      //     "  dy:" +
+      //     dy.toString() +
+      //     " count:" +
+      //     count.toString()
+      // );
       count++;
-      dx += dx;
-      dy += dy;
+      dx += x;
+      dy += y;
+      // console.log(
+      //   "dx:" +
+      //     dx.toString() +
+      //     "  dy:" +
+      //     dy.toString() +
+      //     " horizontal + dx:" +
+      //     (horizontal + dx).toString() +
+      //     "  vertical + dy:" +
+      //     (vertical + dy).toString() +
+      //     " count:" +
+      //     count.toString()
+      // );
     }
     return count;
   }
 
   return (
     <>
-      <h1>Tic-Tac-Toe</h1>
-      <BoardSettings
-        {...{
-          horizontalSquare,
-          setHorizontalSquare,
-          verticalSquare,
-          setVerticalSquare,
-          setBoardValue,
-        }}
-      />
-      <Board {...{boardValue, setBoardValue, horizontalSquare, verticalSquare, checkWinner}} />
+      <div className="flex flex-col items-center mt-4 mb-6">
+        <h1 className="text-4xl font-bold">Tic-Tac-Toe</h1>
+        <BoardSettings
+          {...{
+            horizontalSquare,
+            setHorizontalSquare,
+            verticalSquare,
+            setVerticalSquare,
+            setBoardValue,
+            victoryThreshold,
+            setVictoryThreshold,
+          }}
+        />
+      </div>
+      <div className="flex flex-col items-center justify-center bg-blue-200 rounded-lg shadow-lg pt-6">
+        <Message {...{ playerState }} />
+        <Board
+          {...{
+            boardValue,
+            setBoardValue,
+            horizontalSquare,
+            verticalSquare,
+            checkWinner,
+          }}
+        />
+      </div>
+      <div className="flex flex-col items-center mt-4 mb-6">
+        <Replay
+          {...{
+            setBoardValue,
+            verticalSquare,
+            horizontalSquare,
+            setPlayerState,
+          }}
+        />
+      </div>
     </>
   );
 };

@@ -31,7 +31,7 @@ function Board({
 }: BoardProps) {
   const [switchPlayer, setSwitchPlayer] = useState(false);
 
-  function handleClick(i: number, j: number) {
+  const handleClick = (i: number, j: number) => {
     if (boardValue[i][j] !== "") {
       console.log("already clicked");
       return;
@@ -47,30 +47,28 @@ function Board({
   }
 
   return (
-    <>
-      <div
-        className="flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-lg p-4 mb-6"
-        style={{ display: "inline-block" }}
-      >
-        {Array.from({ length: verticalSquare }).map((_, i) => (
-          <div
-            key={i}
-            className="flex flex-row"
-            style={{ marginBottom: i !== verticalSquare - 1 ? "4px" : "0" }}
-          >
-            {Array.from({ length: horizontalSquare }).map((_, j) => (
-              <Square
-                key={`${i.toString()}${j.toString()}-square`}
-                value={boardValue[i][j]}
-                onSquareClick={() => {
-                  handleClick(i, j);
-                }}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-    </>
+    <div
+      className="flex flex-col items-center justify-center bg-gray-200 rounded-lg shadow-lg p-4 mb-6"
+      style={{ display: "inline-block" }}
+    >
+      {Array.from({ length: verticalSquare }).map((_, i) => (
+        <div
+          key={i}
+          className="flex flex-row"
+          style={{ marginBottom: i !== verticalSquare - 1 ? "4px" : "0" }}
+        >
+          {Array.from({ length: horizontalSquare }).map((_, j) => (
+            <Square
+              key={`${i.toString()}${j.toString()}-square`}
+              value={boardValue[i][j]}
+              onSquareClick={() => {
+                handleClick(i, j);
+              }}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
   );
 }
 

@@ -1,5 +1,6 @@
 import type { ChangeEvent } from "react";
 import type { BoardValue } from "./TicTacToe";
+import "./TicTacToe.css";
 
 interface BoardSettingsProps {
   horizontalSquare: number;
@@ -7,6 +8,8 @@ interface BoardSettingsProps {
   verticalSquare: number;
   setVerticalSquare: React.Dispatch<React.SetStateAction<number>>;
   setBoardValue: React.Dispatch<React.SetStateAction<BoardValue[][]>>;
+  victoryThreshold: number;
+  setVictoryThreshold: React.Dispatch<React.SetStateAction<number>>;
 }
 function BoardSettings({
   horizontalSquare,
@@ -14,9 +17,11 @@ function BoardSettings({
   verticalSquare,
   setVerticalSquare,
   setBoardValue,
+  victoryThreshold,
+  setVictoryThreshold
 }: BoardSettingsProps) {
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    if (+e.currentTarget.value > 0 && +e.currentTarget.value <= 10) {
+  const handleChangeNumberSquare = (e: ChangeEvent<HTMLInputElement>) => {
+    if (+e.currentTarget.value >= 3 && +e.currentTarget.value <= 10) {
       switch (e.currentTarget.name) {
         case "horizontal":
           setBoardValue(
@@ -25,7 +30,6 @@ function BoardSettings({
             )
           );
           setHorizontalSquare(+e.currentTarget.value);
-          console.log("vertical" + horizontalSquare.toString());
           break;
         case "vertical":
           setBoardValue(
@@ -34,15 +38,21 @@ function BoardSettings({
             )
           );
           setVerticalSquare(+e.currentTarget.value);
-          console.log("vertical" + verticalSquare.toString());
           break;
       }
     }
   }
 
+  const handleChangeVictoryThreshold = (e: ChangeEvent<HTMLInputElement>) => {
+    if(+e.currentTarget.value >= 3 && +e.currentTarget.value <= 10) {
+      setVictoryThreshold(+e.currentTarget.value);
+      console.log(e.currentTarget.value);
+    }
+  }
+
   return (
     <div className="settings">
-      <div className="flex flex-col md:flex-row gap-6 mb-6 items-center justify-center">
+      <div className="flex flex-row md:flex-row gap-6 mb-6 items-center justify-center">
         <div className="flex flex-col items-start bg-white rounded-lg shadow-md p-4 m-2">
           <label
             htmlFor="horizontal"
@@ -59,7 +69,7 @@ function BoardSettings({
             min={1}
             max={10}
             value={horizontalSquare}
-            onChange={handleChange}
+            onChange={handleChangeNumberSquare}
           />
         </div>
         <div className="flex flex-col items-start bg-white rounded-lg shadow-md p-4 m-2">
@@ -77,7 +87,25 @@ function BoardSettings({
             min={1}
             max={10}
             value={verticalSquare}
-            onChange={handleChange}
+            onChange={handleChangeNumberSquare}
+          />
+        </div>
+        <div className="flex flex-col items-start bg-white rounded-lg shadow-md p-4 m-2">
+          <label
+            htmlFor="victoryThreshold"
+            className="mb-2 text-lg font-semibold text-gray-700"
+          >
+            <span className="text-purple-600">Symboles alignés</span> pour gagner :
+          </label>
+          <input
+            id="victoryThreshold"
+            className="inputSquare w-20 px-2 py-1 rounded border-2 border-green-400 focus:border-green-600 focus:ring-2 focus:ring-green-200 transition"
+            type="number"
+            name="victoryThreshold"
+            min={3}
+            max={10}
+            value={victoryThreshold}
+            onChange={handleChangeVictoryThreshold}
           />
         </div>
       </div>
