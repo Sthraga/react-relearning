@@ -10,6 +10,12 @@
     align-items: center;
 }
 
+.navBar>h1 {
+    font-size: 2em;
+    width: 100%;
+    text-align: center;
+}
+
 .listNavBar {
     display: flex;
     gap: 2rem;
@@ -19,6 +25,9 @@
     width: 100%;
     align-items: center;
     height: 100%;
+}
+.listNavBar.right {
+    flex-direction: row-reverse
 }
 
 .navSpacer {

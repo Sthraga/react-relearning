@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./TicTacToe.css";
 import BoardSettings from "./BoardSettings";
 import Board from "./Board";

@@ -1,0 +1,27 @@
+.circle {
+  border: 1px solid #000000;
+  margin: 0.1em;
+  border-radius: 40px;
+  width: 80px;
+  height: 80px;
+  font-size: 1.5rem;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+}
+
+.circle:focus,
+.circle:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 600px) {
+  .header {
+    height: 48px;
+    top: 64px;
+    padding: 0 0.5rem;
+  }
+  .header h1 {
+    font-size: 1.2rem;
+  }
+}
